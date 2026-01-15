@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ApiNumber10.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiNumber10.Controllers
@@ -7,6 +8,17 @@ namespace ApiNumber10.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        
+        public ApplicationDbContext DbContext { get; }
+        public UserController(ApplicationDbContext dbContext)
+        {
+            DbContext = dbContext;
+        }
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            var allUsers = DbContext.Users.ToList();
+
+            return Ok(allUsers);
+        }
     }
 }
