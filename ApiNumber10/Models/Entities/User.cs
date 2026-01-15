@@ -1,4 +1,4 @@
-﻿namespace ApiNumber10.Models
+﻿namespace ApiNumber10.Models.Entities
 {
     public class User
     {

@@ -1,4 +1,4 @@
-﻿using ApiNumber10.Models;
+﻿using ApiNumber10.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiNumber10.Data
