@@ -7,6 +7,6 @@ namespace ApiNumber10.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
+        
     }
 }
