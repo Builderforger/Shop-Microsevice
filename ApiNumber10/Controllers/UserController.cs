@@ -1,5 +1,4 @@
 ﻿using ApiNumber10.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiNumber10.Controllers
