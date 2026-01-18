@@ -2,9 +2,13 @@
 {
     public class User
     {
-        public Guid id { get; set; }
-        public required string name { get; set; }
-        public required string email { get; set; }
-        public required string password { get; set; }
+        public Guid Id { get; set; }
+
+        public required string Name { get; set; }
+
+        public required string Email { get; set; }
+        public required string PasswordHash { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
