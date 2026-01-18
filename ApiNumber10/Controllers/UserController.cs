@@ -13,11 +13,6 @@ namespace ApiNumber10.Controllers
             DbContext = dbContext;
         }
         [HttpGet]
-        public IActionResult GetAllUsers()
-        {
-            var allUsers = DbContext.Users.ToList();
-
-            return Ok(allUsers);
-        }
+        
     }
 }
