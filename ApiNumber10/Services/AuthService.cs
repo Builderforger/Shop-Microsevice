@@ -20,7 +20,7 @@ namespace ApiNumber10.Services
                 return false; // User with the same email already exists
             }
             // Hash the password
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash);
 
             var user = new User
             {
@@ -37,7 +37,7 @@ namespace ApiNumber10.Services
         public async Task<string?> LoginAsync(LoginDto dto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.PasswordHash, user.PasswordHash))
             {
                 return null; //  If user isn't found   
             }

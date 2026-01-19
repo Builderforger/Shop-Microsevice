@@ -8,6 +8,6 @@ namespace ApiNumber10.DTOs
         [EmailAddress(ErrorMessage = "Некоректный формат почты")]
         public required string Email { get; set; }
         [MinLength(6, ErrorMessage = "Пароль слишком короткий")]    
-        public required string Password { get; set; }
+        public required string PasswordHash { get; set; }
     }
 }

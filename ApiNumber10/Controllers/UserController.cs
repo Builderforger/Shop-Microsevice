@@ -1,5 +1,7 @@
 ﻿using ApiNumber10.Data;
 using Microsoft.AspNetCore.Mvc;
+using ApiNumber10.Services;
+using ApiNumber10.DTOs;
 
 namespace ApiNumber10.Controllers
 {
@@ -7,12 +9,6 @@ namespace ApiNumber10.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        public ApplicationDbContext DbContext { get; }
-        public UserController(ApplicationDbContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-        [HttpGet]
         
     }
 }
