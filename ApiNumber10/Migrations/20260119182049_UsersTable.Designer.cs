@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiNumber10.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260118125056_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260119182049_UsersTable")]
+    partial class UsersTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,9 @@ namespace ApiNumber10.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

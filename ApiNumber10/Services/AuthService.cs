@@ -34,14 +34,21 @@ namespace ApiNumber10.Services
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<string?> LoginAsync(LoginDto dto)
+        public async Task<UserDto?> LoginAsync(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.PasswordHash, user.PasswordHash))
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);// Email searghing 
+
+            if (user == null || user.PasswordHash != dto.PasswordHash)
             {
-                return null; //  If user isn't found   
+                return null;
             }
-            return "Успешный вход!"; // There will have to JWT-token generation later
+
+            return new UserDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email
+            };
         }
-    }
+     }
 }
