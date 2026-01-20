@@ -2,6 +2,7 @@
 using ApiNumber10.DTOs;
 using ApiNumber10.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ApiNumber10.Services
 {
@@ -38,7 +39,12 @@ namespace ApiNumber10.Services
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);// Email searghing 
 
-            if (user == null || user.PasswordHash != dto.PasswordHash)
+            if (user == null) return null;
+            
+
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.PasswordHash, user.PasswordHash);
+
+            if (!isPasswordValid)
             {
                 return null;
             }
