@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ApiNumber10.Data;
 using ApiNumber10.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ApiNumber10.Controllers
 {
@@ -49,6 +50,26 @@ namespace ApiNumber10.Controllers
                 return NotFound("Пользователь не найден.");
             }
             return Ok(user);
-        }   
+        }
+        [Authorize]
+        [HttpGet("GetMe")]
+        public IActionResult GetMe()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("Токен пустой или неверный");
+            }
+            return Ok(new
+            {
+                Message = "Я тебя знаю!",
+                UserId = userId,
+                UserName = userName,
+                UserNameEmail = userEmail,
+            });
+        }
     }
 }
