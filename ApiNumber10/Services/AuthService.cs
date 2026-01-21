@@ -1,6 +1,7 @@
 ﻿using ApiNumber10.Data;
 using ApiNumber10.DTOs;
 using ApiNumber10.Models.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
@@ -17,6 +18,11 @@ namespace ApiNumber10.Services
         public async Task<bool> RegisterAsync(RegisterDto dto)
         {
             // Hash the password
+            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+            {
+                return false; // Email уже занят
+            }
+
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash);
 
             var user = new User
@@ -26,19 +32,8 @@ namespace ApiNumber10.Services
                 PasswordHash = passwordHash,
                 CreatedAt = DateTime.UtcNow
             };
-            
-            try
-            {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("duplicate") == true || 
-                                               ex.InnerException?.Message.Contains("23505") == true)
-            {
-                // Email already exists (PostgreSQL error code 23505 = unique violation)
-                return false;
-            }
+
+            return true;
         }
         public async Task<UserDto?> LoginAsync(LoginDto dto)
         {
