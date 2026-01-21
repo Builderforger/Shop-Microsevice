@@ -17,7 +17,7 @@ namespace ApiNumber10.Controllers
         {
             _context = context;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -30,6 +30,7 @@ namespace ApiNumber10.Controllers
 
             return Ok(users);
         }
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
