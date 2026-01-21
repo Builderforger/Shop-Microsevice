@@ -3,16 +3,24 @@ using ApiNumber10.DTOs;
 using ApiNumber10.Models.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Metadata.Ecma335;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+
 
 namespace ApiNumber10.Services
 {
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;
-        public AuthService(ApplicationDbContext context)
+        private readonly IConfiguration _configuration;
+        public AuthService(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<bool> RegisterAsync(RegisterDto dto)
@@ -35,26 +43,39 @@ namespace ApiNumber10.Services
 
             return true;
         }
-        public async Task<UserDto?> LoginAsync(LoginDto dto)
+        public async Task<string?> LoginAsync(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);// Email searghing 
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == dto.Email.ToLower()); // Search user by email 
 
-            if (user == null) return null;
-
-
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.PasswordHash, user.PasswordHash);
-
-            if (!isPasswordValid)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.PasswordHash, user.PasswordHash)) // Verify password
             {
                 return null;
             }
 
-            return new UserDto
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email
-            };
+            var token = GenerateJwtToken(user); // Generate JWT token 
+            return token;
         }
-     }
+        private string GenerateJwtToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: credentials);
+             
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+    }
 }

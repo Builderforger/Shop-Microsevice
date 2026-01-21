@@ -5,6 +5,6 @@ namespace ApiNumber10.Services
     public interface IAuthService
     {
         Task<bool> RegisterAsync(RegisterDto registerDto);
-        Task<UserDto?> LoginAsync(LoginDto loginDto);
+        Task<string?> LoginAsync(LoginDto loginDto);
     }
 }

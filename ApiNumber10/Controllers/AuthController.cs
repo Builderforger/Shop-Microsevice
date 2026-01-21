@@ -35,7 +35,7 @@ namespace ApiNumber10.Controllers
             {
                 return Unauthorized("Неверный логин или пароль.");
             }
-            return Ok(new { Token = token });
+            return Ok(new {token});
         }
     }
 }
