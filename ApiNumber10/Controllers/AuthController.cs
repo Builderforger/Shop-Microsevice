@@ -37,5 +37,16 @@ namespace ApiNumber10.Controllers
             }
             return Ok(new {token});
         }
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] AuthResponceDto dto)
+        {
+            var result = await _authService.RefreshTokenAsync(dto);
+
+            if (result == null)
+            {
+                return Unauthorized("Неверный токен обновления.");
+            }
+            return Ok(result);
+        }
     }
 }
