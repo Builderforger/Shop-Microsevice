@@ -1,3 +1,48 @@
+version: '3.8'
 
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Your_password123
+      POSTGRES_DB: CrudDb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  crud_apinumber10:
+    build:
+      context: ./back/ApiNumber10
+      dockerfile: Dockerfile
+    container_name: crud_apinumber10_container
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CrudDb;Username=postgres;Password=Your_password123
+    depends_on:
+      - db
 
+  shop_api:
+    build:
+      context: ./back/ShopApi
+      dockerfile: Dockerfile
+    container_name: shopapi_container
+    ports:
+      - "5001:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=ShopDb;Username=postgres;Password=Your_password123
+    depends_on:
+      - db
+
+volumes:
+  db_data:
