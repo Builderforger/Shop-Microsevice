@@ -12,7 +12,6 @@ namespace ApiNumber10.Data
         }
 
         public DbSet<User> Users { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // It's do every email unique in database

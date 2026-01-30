@@ -39,7 +39,9 @@ namespace ApiNumber10.Services
                 Name = dto.Name,
                 Email = dto.Email,
                 PasswordHash = passwordHash,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                RefreshToken = string.Empty,
+                RefreshTokenExpiryTime = null
             };
 
             return true;
@@ -104,7 +106,7 @@ namespace ApiNumber10.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             var token = new JwtSecurityToken(
