@@ -14,7 +14,7 @@ namespace ApiNumber10.Controllers
         {
             return Ok(new { status = "У вас есть доступ к админке." });
         }
-        [HttpGet("add-product")]
+        [HttpPost("add-product")]
         public IActionResult AddProduct()
         {
             return Ok("Товар добавлен успешно!");

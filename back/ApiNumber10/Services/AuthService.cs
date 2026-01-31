@@ -44,6 +44,9 @@ namespace ApiNumber10.Services
                 RefreshTokenExpiryTime = null
             };
 
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
             return true;
         }
         public async Task<AuthResponceDto?> LoginAsync(LoginDto dto)
@@ -64,7 +67,7 @@ namespace ApiNumber10.Services
 
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // Set refresh token expiry time
-            
+
             await _context.SaveChangesAsync();
 
             return new AuthResponceDto
@@ -107,7 +110,8 @@ namespace ApiNumber10.Services
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
+                new Claim(ClaimTypes.Role, user.Role) // Add user role as claim
+        };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
@@ -115,7 +119,7 @@ namespace ApiNumber10.Services
                 claims: claims,
                 expires: DateTime.Now.AddHours(2),
                 signingCredentials: credentials);
-             
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
         private string GenerateRefreshToken()
