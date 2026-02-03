@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Threading;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -45,8 +46,30 @@ var app = builder.Build();
 // Apply EF Core migrations at startup
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
-    db.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    int maxRetries = 8;
+    int delayMs = 2000;
+    for (int attempt = 1; attempt <= maxRetries; attempt++)
+    {
+        try
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
+            db.Database.Migrate();
+            logger.LogInformation("ShopDb migrations applied successfully.");
+            break;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Attempt {Attempt} to apply ShopDb migrations failed.", attempt);
+            if (attempt == maxRetries)
+            {
+                logger.LogError(ex, "All attempts to apply ShopDb migrations failed.");
+                if (!app.Environment.IsDevelopment()) throw;
+            }
+            Thread.Sleep(delayMs);
+            delayMs *= 2;
+        }
+    }
 }
 
 // Configure the HTTP request pipeline.
