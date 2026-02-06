@@ -45,13 +45,36 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        // Если база данных еще не создана — EF Core создаст её и накатит все миграции
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+            Console.WriteLine("--> Миграции успешно применены.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"--> Ошибка при запуске миграций: {ex.Message}");
+    }
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi(); // Для .NET 10 OpenAPI
+    app.UseSwagger(); // Если используешь классический Swagger
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty;
+    });
 }
+
 
 app.UseHttpsRedirection();
 

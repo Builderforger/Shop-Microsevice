@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ShopDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,41 +43,36 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 var app = builder.Build();
 
-// Apply EF Core migrations at startup
 using (var scope = app.Services.CreateScope())
 {
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    int maxRetries = 8;
-    int delayMs = 2000;
-    for (int attempt = 1; attempt <= maxRetries; attempt++)
+    var services = scope.ServiceProvider;
+    try
     {
-        try
+        var context = services.GetRequiredService<ShopDbContext>();
+        // Если база данных еще не создана — EF Core создаст её и накатит все миграции
+        if (context.Database.GetPendingMigrations().Any())
         {
-            var db = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
-            db.Database.Migrate();
-            logger.LogInformation("ShopDb migrations applied successfully.");
-            break;
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Attempt {Attempt} to apply ShopDb migrations failed.", attempt);
-            if (attempt == maxRetries)
-            {
-                logger.LogError(ex, "All attempts to apply ShopDb migrations failed.");
-                if (!app.Environment.IsDevelopment()) throw;
-            }
-            Thread.Sleep(delayMs);
-            delayMs *= 2;
+            context.Database.Migrate();
+            Console.WriteLine("--> Миграции успешно применены.");
         }
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"--> Ошибка при запуске миграций: {ex.Message}");
+    }
 }
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi(); // Для .NET 10 OpenAPI
+    app.UseSwagger(); // Если используешь классический Swagger
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // Чтобы открывался сразу на http://localhost:5001/
+    });
 }
+
 
 app.UseHttpsRedirection();
 
