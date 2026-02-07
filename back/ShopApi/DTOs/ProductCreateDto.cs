@@ -1,4 +1,4 @@
-﻿namespace CatalogApi.DTOs
+﻿namespace ShopApi.DTOs
 {
     public class ProductCreateDto
     {

@@ -49,7 +49,6 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ShopApiDbContext>();
-        // Если база данных еще не создана — EF Core создаст её и накатит все миграции
         if (context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
@@ -64,12 +63,12 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi(); // Для .NET 10 OpenAPI
-    app.UseSwagger(); // Если используешь классический Swagger
+    app.MapOpenApi(); 
+    app.UseSwagger(); 
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // Чтобы открывался сразу на http://localhost:5001/
+        c.RoutePrefix = string.Empty; 
     });
 }
 
