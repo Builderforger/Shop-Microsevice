@@ -7,6 +7,6 @@ namespace ShopApi.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-
+        [HttpPost]
     }
 }

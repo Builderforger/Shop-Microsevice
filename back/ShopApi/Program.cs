@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<ShopDbContext>(options =>
+builder.Services.AddDbContext<CatalogDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure JWT Authentication
@@ -48,7 +48,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<ShopDbContext>();
+        var context = services.GetRequiredService<CatalogDbContext>();
         // Если база данных еще не создана — EF Core создаст её и накатит все миграции
         if (context.Database.GetPendingMigrations().Any())
         {

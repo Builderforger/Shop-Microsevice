@@ -5,9 +5,9 @@ using System.Reflection.Emit;
 
 namespace ShopApi.Data
 {
-    public class ShopDbContext : DbContext
+    public class CatalogDbContext : DbContext
     {
-        public ShopDbContext(DbContextOptions<ShopDbContext> options)
+        public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
         : base(options)
         {
         }

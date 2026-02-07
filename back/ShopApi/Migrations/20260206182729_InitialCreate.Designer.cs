@@ -11,7 +11,7 @@ using ShopApi.Data;
 
 namespace ShopApi.Migrations
 {
-    [DbContext(typeof(ShopDbContext))]
+    [DbContext(typeof(CatalogDbContext))]
     [Migration("20260206182729_InitialCreate")]
     partial class InitialCreate
     {
