@@ -10,7 +10,7 @@ using ShopApi.Data;
 
 namespace ShopApi.Migrations
 {
-    [DbContext(typeof(CatalogDbContext))]
+    [DbContext(typeof(ShopApiDbContext))]
     partial class ShopDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
