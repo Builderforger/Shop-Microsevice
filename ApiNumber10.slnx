@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="back/ApiNumber10/ApiNumber10.csproj" />
-  <Project Path="back/ShopApi/ShopApiApi.csproj" />
+  <Project Path="back/ShopApi/ShopApi.csproj" />
 </Solution>
