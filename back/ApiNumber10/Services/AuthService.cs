@@ -1,9 +1,9 @@
 ﻿using ApiNumber10.Data;
 using ApiNumber10.DTOs;
-using ApiNumber10.Models.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ApiNumber10.Models.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata.Ecma335;

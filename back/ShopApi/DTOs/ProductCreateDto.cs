@@ -11,7 +11,8 @@ namespace ShopApi.DTOs
         public required string Name { get; init; }
         [StringLength(1000, MinimumLength = 10)]
         public string? Description { get; init; }
-        public string? Category { get; init; }
+        [Required]
+        public int CategoryId { get; init; }
         [Range(0.01, 1000000)]
         [DefaultValue(100.0)]
         public decimal Price { get; init; }

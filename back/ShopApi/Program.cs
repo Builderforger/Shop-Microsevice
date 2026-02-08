@@ -1,11 +1,14 @@
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Threading;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ShopApi.Data;
-using System.Text;
+using ShopApi.DTOs;
+using ShopApi.Models.Entities;
 using ShopApi.Service;
+using System.Text;
+using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,9 @@ builder.Services.AddDbContext<ShopApiDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IProductService, ProductService>();
+
+TypeAdapterConfig<Product, ProductResponseDto>.NewConfig()
+    .Map(dest => dest.Category, src => src.Category.Name);
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

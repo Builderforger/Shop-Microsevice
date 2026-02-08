@@ -12,7 +12,7 @@ public class ProductService(ShopApiDbContext context) : IProductService
     public async Task<IEnumerable<ProductResponseDto>> GetAllAsync()
     {
         return await context.Products
-            .AsNoTracking()
+            .Include(p => p.Category)
             .ProjectToType<ProductResponseDto>()
             .ToListAsync();
     }
@@ -33,6 +33,7 @@ public class ProductService(ShopApiDbContext context) : IProductService
 
         context.Products.Add(product);
         await context.SaveChangesAsync();
+        await context.Entry(product).Reference(p => p.Category).LoadAsync();
 
         return product.Adapt<ProductResponseDto>();
     }
