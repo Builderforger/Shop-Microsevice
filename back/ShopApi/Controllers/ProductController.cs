@@ -9,37 +9,37 @@ namespace ShopApi.Controllers;
 public class ProductController(IProductService productService) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<ProductResponseDto>>> GetAll()
     {
         var products = await productService.GetAllAsync();
         return Ok(products);
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductResponseDto>> GetById(Guid id)
     {
         var product = await productService.GetByIdAsync(id);
-        return product is not null ? Ok(product) : NotFound();
+        return product != null ? Ok(product) : NotFound();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(ProductCreateDto dto)
+    public async Task<ActionResult<ProductResponseDto>> Create(ProductCreateDto dto)
     {
-        var createdProduct = await productService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
+        var result = await productService.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, ProductUpdateDto dto)
     {
-        var result = await productService.UpdateAsync(id, dto);
-        return result ? NoContent() : NotFound();
+        var success = await productService.UpdateAsync(id, dto);
+        return success ? NoContent() : NotFound();
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var result = await productService.DeleteAsync(id);
-        return result ? NoContent() : NotFound();
+        var success = await productService.DeleteAsync(id);
+        return success ? NoContent() : NotFound();
     }
 }

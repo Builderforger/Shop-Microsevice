@@ -10,6 +10,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Mapster;
 
 
 namespace ApiNumber10.Services
@@ -29,20 +30,14 @@ namespace ApiNumber10.Services
             // Hash the password
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
             {
-                return false; // Email уже занят
+                return false; // Email always must be unique, so if it already exists, registration fails
             }
 
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash);
-
-            var user = new User
-            {
-                Name = dto.Name,
-                Email = dto.Email,
-                PasswordHash = passwordHash,
-                CreatedAt = DateTime.UtcNow,
-                RefreshToken = string.Empty,
-                RefreshTokenExpiryTime = null
-            };
+            var user = dto.Adapt<User>();
+            
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash); // Hash the password before saving
+            user.CreatedAt = DateTime.UtcNow;
+            user.RefreshToken = string.Empty;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
