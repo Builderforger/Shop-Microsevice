@@ -7,5 +7,6 @@
         public string? Description { get; init; }
         public string? Category { get; init; }
         public decimal Price { get; init; }
+        public int Stock { get; init; }
     }
 }
