@@ -17,6 +17,11 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - "5050:80"
+  redis:
+    image: redis:latest
+    container_name: redis_cache
+    ports:
+      - "6379:63379"
     depends_on:
       - db
   api10:

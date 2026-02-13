@@ -27,7 +27,6 @@ namespace ApiNumber10.Services
 
         public async Task<bool> RegisterAsync(RegisterDto dto)
         {
-            // Hash the password
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
             {
                 return false; // Email always must be unique, so if it already exists, registration fails
