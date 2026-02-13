@@ -1,0 +1,21 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Shared.Protos";
+
+package user;
+
+// Сервис, который будет отдавать инфу о юзерах
+service UserGrpcService {
+  rpc GetUserInfo (UserRequest) returns (UserResponse);
+}
+
+message UserRequest {
+  string user_id = 1;
+}
+
+message UserResponse {
+  string user_id = 1;
+  string name = 2;
+  string email = 3;
+  string role = 4;
+}

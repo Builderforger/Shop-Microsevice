@@ -12,7 +12,8 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["back/ApiNumber10/ApiNumber10.csproj", "back/ApiNumber10/"]
+COPY ["./back/Shared/Shared.csproj", "./back/Shared/"]
+COPY ["./back/ApiNumber10/ApiNumber10.csproj", "./back/ApiNumber10/"]
 RUN dotnet restore "./back/ApiNumber10/ApiNumber10.csproj"
 COPY . .
 WORKDIR "/src/back/ApiNumber10"

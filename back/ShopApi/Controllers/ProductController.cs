@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Protos;
 using ShopApi.DTOs;
 using ShopApi.Service;
 
@@ -9,6 +11,7 @@ namespace ShopApi.Controllers;
 public class ProductController(IProductService productService) : ControllerBase
 {
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<ProductResponseDto>>> GetAll()
     {
         var products = await productService.GetAllAsync();
@@ -23,6 +26,7 @@ public class ProductController(IProductService productService) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<ProductResponseDto>> Create(ProductCreateDto dto)
     {
         var result = await productService.CreateAsync(dto);
@@ -30,6 +34,7 @@ public class ProductController(IProductService productService) : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(Guid id, ProductUpdateDto dto)
     {
         var success = await productService.UpdateAsync(id, dto);
@@ -37,9 +42,29 @@ public class ProductController(IProductService productService) : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var success = await productService.DeleteAsync(id);
         return success ? NoContent() : NotFound();
+    }
+    [HttpGet("test-grpc/{userId}")]
+    public async Task<IActionResult> GetUserGrpc(string userId, [FromServices] UserGrpcService.UserGrpcServiceClient client)
+    {
+        try
+        {
+            var request = new UserRequest { UserId = userId };
+            var response = await client.GetUserInfoAsync(request);
+            return Ok(new
+            {
+                Status = "Success",
+                Name = response.Name,
+                Role = response.Role
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"gRPC dead: { ex.Message}");
+        }
     }
 }

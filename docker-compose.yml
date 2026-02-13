@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=api10_db
+      - POSTGRES_DB=postgres
     ports:
       - "5432:5432"
   pgadmin:
@@ -25,12 +25,17 @@ services:
       dockerfile: back/ApiNumber10/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - Kestrel__Endpoints__Http__Url=http://+:8080
+      - Kestrel__Endpoints__Http__Protocols=Http1
+      - Kestrel__Endpoints__Grpc__Url=http://+:8081
+      - Kestrel__Endpoints__Grpc__Protocols=Http2
       - ConnectionStrings__DefaultConnection=Host=db;Database=api10_db;Username=myuser;Password=mypassword
       - JwtSettings__Secret=Talbansky_Patron_2008_Tarantino_Bibob_Malbsmd7?
       - JwtSettings__Issuer=ApiNumber10
       - JwtSettings__Audience=MyWebProject
     ports:
       - "5001:8080"
+      - "50051:8081" 
     depends_on:
       - db
   shopapi:
