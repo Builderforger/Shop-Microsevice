@@ -1,11 +1,14 @@
-﻿namespace BasketApi.DTOs
+﻿using CartApi.Models.Entities;
+
+namespace CartApi.DTOs
 {
-    public class BasketItemResponseDto
+    public class CartItemResponseDto
     {
-        public required string ProductId { get; init; }
+        public required Guid ProductId { get; init; }
         public required string ProductName { get; init; }
         public required decimal Price { get; init; }
         public int Quantity { get; init; }
         public decimal TotalPrice => Price * Quantity;
+
     }
 }

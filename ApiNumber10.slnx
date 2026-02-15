@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="back/ApiNumber10/ApiNumber10.csproj" />
-  <Project Path="back/BasketApi/BasketApi.csproj" />
+  <Project Path="back/CartApi/CartApi.csproj" />
   <Project Path="back/Shared/Shared.csproj" />
   <Project Path="back/ShopApi/ShopApi.csproj" />
 </Solution>
