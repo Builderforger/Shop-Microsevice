@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Protos;
 using ShopApi.Data;
+using ShopApi.GrpcServices;
 using ShopApi.DTOs;
 using ShopApi.Models.Entities;
 using ShopApi.Service;
@@ -22,6 +23,9 @@ builder.Services.AddGrpcClient<UserGrpcService.UserGrpcServiceClient>(o =>
 {
     o.Address = new Uri("http://api10:8081");
 });
+
+// gRPC server for products
+builder.Services.AddGrpc();
 
 builder.Services.AddDbContext<ShopApiDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -96,5 +100,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<ProductGrpcServiceImpl>();
 
 app.Run();

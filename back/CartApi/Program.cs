@@ -8,14 +8,12 @@ using Shared.Protos;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
 {
@@ -31,6 +29,11 @@ builder.Services.AddScoped<ICartRespository, CartRepository>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
+// gRPC client for products
+builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o =>
+{
+    o.Address = new Uri("http://shopapi:8081");
 });
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secret = jwtSettings["Secret"];
