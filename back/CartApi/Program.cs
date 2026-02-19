@@ -1,5 +1,6 @@
-using CartApi.Data;
-using CartApi.Services;
+using CartApi.Application.Interfaces;
+using CartApi.Infrastructure.Data;
+using CartApi.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;

@@ -1,5 +1,6 @@
-﻿using ApiNumber10.Data;
-using ApiNumber10.Services;
+﻿using ApiNumber10.Application.Interfaces;
+using ApiNumber10.Infrastructure.Data;
+using ApiNumber10.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shared.Protos;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -36,9 +34,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -49,13 +47,14 @@ var app = builder.Build();
 
 app.MapGrpcService<UserGrpcServiceImpl>();
 
+
+// Migrate database on startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Если база данных еще не создана — EF Core создаст её и накатит все миграции
         if (context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
@@ -67,11 +66,11 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"--> Ошибка при запуске миграций: {ex.Message}");
     }
 }
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi(); // Для .NET 10 OpenAPI
-    app.UseSwagger(); // Если используешь классический Swagger
+    app.MapOpenApi(); 
+    app.UseSwagger(); 
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
