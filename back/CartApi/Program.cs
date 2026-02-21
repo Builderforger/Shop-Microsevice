@@ -34,7 +34,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 // gRPC client for products
 builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o =>
 {
-    o.Address = new Uri("http://shopapi:8081");
+    o.Address = new Uri("http://catalog:8081");
 });
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secret = jwtSettings["Secret"];
@@ -77,6 +77,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.MapGet("/ping", () => "pong");
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 

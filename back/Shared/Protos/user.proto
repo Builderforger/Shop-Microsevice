@@ -1,10 +1,7 @@
 ﻿syntax = "proto3";
-
 option csharp_namespace = "Shared.Protos";
-
 package user;
 
-// Сервис, который будет отдавать инфу о юзерах
 service UserGrpcService {
   rpc GetUserInfo (UserRequest) returns (UserResponse);
 }
