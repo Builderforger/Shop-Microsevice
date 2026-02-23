@@ -47,7 +47,7 @@ namespace AuthService.Presentation.Controllers
 
             if (user == null)
             {
-                return NotFound("Пользователь не найден.");
+                return NotFound("User not found.");
             }
             return Ok(user);
         }
@@ -61,11 +61,11 @@ namespace AuthService.Presentation.Controllers
 
             if (userId == null)
             {
-                return Unauthorized("Токен пустой или неверный");
+                return Unauthorized("The token is empty or invalid");
             }
             return Ok(new
             {
-                Message = "Я тебя знаю!",
+                Message = "I know you!",
                 UserId = userId,
                 UserName = userName,
                 UserNameEmail = userEmail,

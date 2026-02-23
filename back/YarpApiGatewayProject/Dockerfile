@@ -12,10 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["YarpApiGatewayProject/YarpApiGatewayProject.csproj", "YarpApiGatewayProject/"]
-RUN dotnet restore "./YarpApiGatewayProject/YarpApiGatewayProject.csproj"
+COPY ["back/YarpApiGatewayProject/YarpApiGatewayProject.csproj", "back/YarpApiGatewayProject/"]
+RUN dotnet restore "./back/YarpApiGatewayProject/YarpApiGatewayProject.csproj"
 COPY . .
-WORKDIR "/src/YarpApiGatewayProject"
+WORKDIR "/src/back/YarpApiGatewayProject"
 RUN dotnet build "./YarpApiGatewayProject.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап

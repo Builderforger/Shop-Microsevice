@@ -1,6 +1,6 @@
-using CartApi.Application.Interfaces;
-using CartApi.Infrastructure.Data;
-using CartApi.Infrastructure.Services;
+using CartService.Application.Interfaces;
+using CartService.Infrastructure.Data;
+using CartService.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;
@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartsService, CartsService>();
 builder.Services.AddScoped<ICartRespository, CartRepository>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -75,10 +75,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AllowAll");
-app.MapGet("/ping", () => "pong");
-app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

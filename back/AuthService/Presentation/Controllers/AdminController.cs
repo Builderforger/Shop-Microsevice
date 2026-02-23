@@ -12,12 +12,12 @@ namespace AuthService.Presentation.Controllers
         [HttpGet("Check")]
         public IActionResult GheckAdmin()
         {
-            return Ok(new { status = "У вас есть доступ к админке." });
+            return Ok(new { status = "You have access to the admin panel" });
         }
         [HttpPost("add-product")]
         public IActionResult AddProduct()
         {
-            return Ok("Товар добавлен успешно!");
+            return Ok("The product has been added successfully!");
         }
     }
 }

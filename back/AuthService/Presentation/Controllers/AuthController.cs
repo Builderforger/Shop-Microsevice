@@ -21,10 +21,10 @@ namespace AuthService.Presentation.Controllers
 
             if (!result)
             {
-                return BadRequest("Ошибка регистра. Возможно, почта уже занята.");
+                return BadRequest("Registry error. The email address may already be in use.");
             }
 
-            return Ok("Регистрация прошла успешно.");
+            return Ok("Registration was successful.");
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
@@ -32,18 +32,18 @@ namespace AuthService.Presentation.Controllers
             var token = await _authService.LoginAsync(loginDto);
             if (token == null)
             {
-                return Unauthorized("Неверный логин или пароль.");
+                return Unauthorized("Incorrect login or password.");
             }
             return Ok(new {token});
         }
-        [HttpPost("refresh-token")]
+        [HttpPost("refresh-token-checker")]
         public async Task<IActionResult> RefreshToken([FromBody] AuthResponceDto dto)
         {
             var result = await _authService.RefreshTokenAsync(dto);
 
             if (result == null)
             {
-                return Unauthorized("Неверный токен обновления.");
+                return Unauthorized("Invalid refresh token.");
             }
             return Ok(result);
         }

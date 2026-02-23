@@ -8,10 +8,10 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Mapster;
-using AuthService.Domain.Entities;
 using AuthService.Application.DTOs;
-using AuthService.Infrastructure.Data;
 using AuthService.Application.Interfaces;
+using AuthService.Domain.Entities;
+using AuthService.Infrastructure.Data;
 
 namespace AuthService.Infrastructure.Services
 {

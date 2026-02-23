@@ -19,15 +19,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+builder.Services.AddGrpc(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 builder.Services.AddControllers();
 builder.Services.AddGrpcClient<UserGrpcService.UserGrpcServiceClient>(o =>
 {
     o.Address = new Uri("http://auth:8081");
 });
-
-// gRPC server for products
-builder.Services.AddGrpc();
-
 builder.Services.AddDbContext<CatalogServiceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -74,12 +83,12 @@ using (var scope = app.Services.CreateScope())
         if (context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
-            Console.WriteLine("--> Миграции успешно применены.");
+            Console.WriteLine("Migrations have been successfully applied.");
         }
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"--> Ошибка при запуске миграций: {ex.Message}");
+        Console.WriteLine($"Error starting migrations: {ex.Message}");
     }
 }
 // Configure the HTTP request pipeline.
@@ -94,10 +103,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
-app.UseHttpsRedirection();
-
-app.MapGet("/ping", () => "pong");
+app.UseCors("AllowAll");
 app.UseRouting();
 
 app.UseAuthentication();

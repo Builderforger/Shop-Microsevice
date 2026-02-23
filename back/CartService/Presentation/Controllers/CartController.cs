@@ -1,15 +1,15 @@
-﻿using CartApi.Application.DTOs;
-using CartApi.Application.Interfaces;
+﻿using CartService.Application.DTOs;
+using CartService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CartApi.Presentation.Controllers
+namespace CartService.Presentation.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController(ICartService service) : ControllerBase
+    public class CartController(ICartsService service) : ControllerBase
     {
         private string? GetUserIdFromToken()
         {

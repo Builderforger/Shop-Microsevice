@@ -48,23 +48,4 @@ public class ProductController(IProductService productService) : ControllerBase
         var success = await productService.DeleteAsync(id);
         return success ? NoContent() : NotFound();
     }
-    [HttpGet("test-grpc/{userId}")]
-    public async Task<IActionResult> GetUserGrpc(string userId, [FromServices] UserGrpcService.UserGrpcServiceClient client)
-    {
-        try
-        {
-            var request = new UserRequest { UserId = userId };
-            var response = await client.GetUserInfoAsync(request);
-            return Ok(new
-            {
-                Status = "Success",
-                Name = response.Name,
-                Role = response.Role
-            });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"gRPC dead: { ex.Message}");
-        }
-    }
 }

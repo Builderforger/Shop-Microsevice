@@ -7,6 +7,9 @@
     <UserSecretsId>3f125599-ca9e-4923-82a1-0daffe82f01e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <AssemblyTitle>CartService</AssemblyTitle>
+    <AssemblyName>CartService</AssemblyName>
+    <RootNamespace>CartService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

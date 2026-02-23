@@ -1,8 +1,8 @@
-﻿using CartApi.Application.DTOs;
+﻿using CartService.Application.DTOs;
 
-namespace CartApi.Application.Interfaces
+namespace CartService.Application.Interfaces
 {
-    public interface ICartService
+    public interface ICartsService
     {
         Task<CartResponseDto?> GetCartAsync(string userId);
         Task<CartResponseDto?> UpdateCartAsync(string userId, List<CartItemCreateDto> items);

@@ -12,20 +12,20 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["back/CartApi/CartApi.csproj", "back/CartApi/"]
+COPY ["back/CartService/CartService.csproj", "back/CartService/"]
 COPY ["back/Shared/Shared.csproj", "back/Shared/"]
-RUN dotnet restore "./back/CartApi/CartApi.csproj"
+RUN dotnet restore "./back/CartService/CartService.csproj"
 COPY . .
-WORKDIR "/src/back/CartApi"
-RUN dotnet build "./CartApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/back/CartService"
+RUN dotnet build "./CartService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./CartApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./CartService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CartApi.dll"]
+ENTRYPOINT ["dotnet", "CartService.dll"]

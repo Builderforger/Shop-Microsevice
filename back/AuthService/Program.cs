@@ -58,12 +58,12 @@ using (var scope = app.Services.CreateScope())
         if (context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
-            Console.WriteLine("--> Миграции успешно применены.");
+            Console.WriteLine("Migrations have been successfully applied.");
         }
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"--> Ошибка при запуске миграций: {ex.Message}");
+        Console.WriteLine($"Error starting migrations: {ex.Message}");
     }
 }
 
@@ -79,11 +79,10 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
-app.MapGet("/ping", () => "pong");
 app.UseRouting();
 
 app.UseAuthentication();

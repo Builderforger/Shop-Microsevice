@@ -1,6 +1,6 @@
-﻿using CartApi.Domain.Entities;
+﻿using CartService.Domain.Entities;
 
-namespace CartApi.Application.DTOs
+namespace CartService.Application.DTOs
 {
     public class CartItemResponseDto
     {

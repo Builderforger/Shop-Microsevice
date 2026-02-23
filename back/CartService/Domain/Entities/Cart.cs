@@ -1,4 +1,4 @@
-﻿namespace CartApi.Domain.Entities
+﻿namespace CartService.Domain.Entities
 {
     public class Cart
     {

@@ -1,8 +1,8 @@
-﻿using CartApi.Domain.Entities;
+﻿using CartService.Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 
-namespace CartApi.Infrastructure.Data
+namespace CartService.Infrastructure.Data
 {
     public class CartRepository(IDistributedCache redis) : ICartRespository
     {
@@ -11,7 +11,7 @@ namespace CartApi.Infrastructure.Data
             var cartData = await redis.GetStringAsync(userId);
             if (string.IsNullOrEmpty(cartData))
                 return null;
-            return System.Text.Json.JsonSerializer.Deserialize<Cart>(cartData);
+            return JsonSerializer.Deserialize<Cart>(cartData);
         }
         public async Task<Cart?> UpdateCartAsync(Cart cart)
         {

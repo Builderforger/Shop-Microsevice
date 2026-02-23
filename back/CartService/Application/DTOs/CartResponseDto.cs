@@ -1,4 +1,4 @@
-﻿namespace CartApi.Application.DTOs
+﻿namespace CartService.Application.DTOs
 {
     public class CartResponseDto
     {

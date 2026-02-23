@@ -1,7 +1,7 @@
 <Solution>
   <Project Path="back/AuthService/AuthService.csproj" />
-  <Project Path="back/CartApi/CartApi.csproj" />
+  <Project Path="back/CartService/CartService.csproj" />
   <Project Path="back/CatalogService/CatalogService.csproj" />
   <Project Path="back/Shared/Shared.csproj" />
-  <Project Path="YarpApiGatewayProject/YarpApiGatewayProject.csproj" Id="98df64d3-b53e-4aec-9eea-1b7d6dc973a6" />
+  <Project Path="back/YarpApiGatewayProject/YarpApiGatewayProject.csproj" />
 </Solution>

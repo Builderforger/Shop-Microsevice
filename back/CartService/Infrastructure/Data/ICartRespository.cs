@@ -1,6 +1,6 @@
-﻿using CartApi.Domain.Entities;
+﻿using CartService.Domain.Entities;
 
-namespace CartApi.Infrastructure.Data
+namespace CartService.Infrastructure.Data
 {
     public interface ICartRespository
     {

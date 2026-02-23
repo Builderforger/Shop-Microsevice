@@ -1,17 +1,17 @@
-﻿using CartApi.Domain.Entities;
+﻿using CartService.Domain.Entities;
 using Mapster;
 using Shared.Protos;
 using Grpc.Core;
 using Microsoft.AspNetCore.Http;
-using CartApi.Application.DTOs;
-using CartApi.Application.Interfaces;
-using CartApi.Infrastructure.Data;
+using CartService.Application.DTOs;
+using CartService.Application.Interfaces;
+using CartService.Infrastructure.Data;
 
-namespace CartApi.Infrastructure.Services
+namespace CartService.Infrastructure.Services
 {
-    public class CartService(ICartRespository repository,
+    public class CartsService(ICartRespository repository,
                            ProductGrpcService.ProductGrpcServiceClient productClient,
-                           IHttpContextAccessor httpContextAccessor) : ICartService
+                           IHttpContextAccessor httpContextAccessor) : ICartsService
     {
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
         private readonly ProductGrpcService.ProductGrpcServiceClient _productClient = productClient;
@@ -70,9 +70,10 @@ namespace CartApi.Infrastructure.Services
                     }
                     // если reply пустой или Name пуст — оставляем fallback
                 }
-                catch (RpcException)
+                catch (RpcException ex)
                 {
-                    // gRPC недоступен — оставляем явный fallback
+                    // gRPC is unavailable - leaving an explicit fallback
+                    throw new Exception("Unable to connect to the product catalog. Please try again later.", ex);
                 }
 
                 cart.Items.Add(new CartItem

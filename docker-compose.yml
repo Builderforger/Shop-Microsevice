@@ -32,6 +32,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kestrel__Endpoints__Http__Url=http://+:8080
       - Kestrel__Endpoints__Http__Protocols=Http1
+      - Kestrel__Endpoints__Grpc__Url=http://+:8081
+      - Kestrel__Endpoints__Grpc__Protocols=Http2
       - ConnectionStrings__DefaultConnection=Host=db;Database=api10_db;Username=myuser;Password=mypassword
       - JwtSettings__Secret=Talbansky_Patron_2008_Tarantino_Bibob_Malbsmd7?
       - JwtSettings__Issuer=AuthService
@@ -60,10 +62,10 @@ services:
       - "50052:8081"
     depends_on:
       - db
-  cartapi:
+  cartservice:
     build:
       context: .
-      dockerfile: back/CartApi/Dockerfile
+      dockerfile: back/CartService/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kestrel__Endpoints__Http__Url=http://+:8080
@@ -76,23 +78,26 @@ services:
       - JwtSettings__Audience=MyWebProject
     ports:
       - "5003:8080"
+      - "50053:8081"
     depends_on:
       - redis
       - auth
-  getway:
+  gateway:
     build:
       context: .
-      dockerfile: YarpApiGatewayProject/Dockerfile
+      dockerfile: back/YarpApiGatewayProject/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kestrel__Endpoints__Http__Url=http://+:8080
       - Kestrel__Endpoints__Http__Protocols=Http1
+      - Kestrel__Endpoints__Grpc__Url=http://+:8081
+      - Kestrel__Endpoints__Grpc__Protocols=Http2
       - JwtSettings__Secret=Talbansky_Patron_2008_Tarantino_Bibob_Malbsmd7?
       - JwtSettings__Issuer=AuthService
       - JwtSettings__Audience=MyWebProject
       - AuthServiceUrl=http://auth:8080
       - CatalogServiceUrl=http://catalog:8080
-      - CartApiUrl=http://cartapi:8080
+      - CartServiceUrl=http://cartservice:8080
       - AuthServiceGrpcUrl=http://auth:8081
       - CatalogServiceGrpcUrl=http://catalog:8081
     ports:
@@ -101,7 +106,7 @@ services:
     depends_on:
       - auth
       - catalog
-      - cartapi
+      - cartservice
 volumes:
   redis_data:
 
