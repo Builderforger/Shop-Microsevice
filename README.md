@@ -1,4 +1,4 @@
-# Shop Microsevice
+# Shop Microsevice(.net 10)
 
 Microservices-based backend application built with ASP.NET Core.
 
